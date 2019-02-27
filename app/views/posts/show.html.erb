@@ -1,1 +1,30 @@
+<h1><%= @post.title %></h1>
+<p><%= @post.content %></p>
 
+<h3>Comments</h3>
+<div>
+  <ul>
+  <% @post.comments.each do |comment| %>
+    <li><%= comment.content %></li>
+  <% end %>
+  </ul>
+</div>
+
+<h3>Users</h3>
+<div>
+  <% unique = @post.comments.map{|comment| comment.user}.uniq %>
+  <% unique.each do |user| %>
+  <%= user.username %>
+  <% end  %>
+</div>
+
+<h3>Add new comment</h3>
+<%= form_for @comment do |f| %>
+  <%= f.collection_select :user_id, User.all, :id, :username, :include_blank => true %>
+  <%= f.fields_for :comments, @post.comments.build do |comments_fields| %>
+    <%= comments_fields.text_field :content %>
+    <% end %>
+  <%= f.label :content%>
+  <%= f.text_field :content %>
+  <%= f.submit %>
+<% end %>
