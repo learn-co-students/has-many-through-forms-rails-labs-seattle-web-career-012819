@@ -13,4 +13,10 @@ class Post < ActiveRecord::Base
       end
     end
 
+  def users_attributes=(user_attributes)
+      user_attributes.values.each do |user_attribute|
+        user = User.find_or_create_by(user_attribute)
+      end
+    end
+
 end

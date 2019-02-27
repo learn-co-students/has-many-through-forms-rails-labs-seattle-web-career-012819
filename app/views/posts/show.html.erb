@@ -5,7 +5,7 @@
 <div>
   <ul>
   <% @post.comments.each do |comment| %>
-    <li><%= comment.content %></li>
+    <li><%= comment.user.username %> says: <%= comment.content %></li>
   <% end %>
   </ul>
 </div>
@@ -16,21 +16,32 @@
   <li><%= category.name %></li>
 <% end %>
 </ul>
-
 <h3>Users</h3>
 <div>
   <% unique = @post.comments.map{|comment| comment.user}.uniq %>
     <ul>
     <% unique.each do |user| %>
-      <li><%= user.username %></li>
+      <li><%= link_to user.username, user_path(user) %></li>
     <% end  %>
   </ul>
 </div>
+
 <h1><%post_id = @comment.post_id %></h1>
 <h3>Add new comment</h3>
 <%= form_for @comment do |f| %>
   <%= f.label :user  %>
   <%= f.collection_select :user_id, User.all, :id, :username, :include_blank => true %>
+
+
+  <%= f.label :new_user %>
+
+  <%= f.fields_for :user  do |p| %>
+    <%= p.text_field :username %>
+  <% end %>
+
+
+
+
   <%= f.label :Comments%>
   <%= f.text_field :content %>
   <%= f.hidden_field :post_id, :value => @post.id %>
