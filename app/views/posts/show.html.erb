@@ -1,1 +1,30 @@
+<h1><%= @post.title %></h1>
+<h2>Categories: <%= @post.categories.map {|c| c.name}.join(", ") %></h2>
+<p><%= @post.content %></p>
 
+
+<h2>Comments:</h2>
+<ul>
+<% @post.comments.each do |c| %>
+  <li><%= c.user.username %> says: <%= c.content %></li>
+<% end %>
+</ul>
+
+<h2>Unique Commenters:</h2>
+<% @post.comments.map {|c| c.user}.uniq.each do |user| %>
+  <%= link_to user.username, user_path(user) %>
+<% end %>
+
+<br>
+
+<h2>Post a Comment:</h2>
+<%= form_for @post do |f| %>
+  <%= f.fields_for :comments, @post.comments.build do |comments_fields| %>
+    <%= comments_fields.label :user_id %>
+    <%= comments_fields.collection_select :user_id, User.all, :id, :username %>
+
+    <%= comments_fields.label :content %>
+    <%= comments_fields.text_area :content %><br>
+  <% end %>
+  <%= f.submit "Create Comment"%>
+<% end %>
