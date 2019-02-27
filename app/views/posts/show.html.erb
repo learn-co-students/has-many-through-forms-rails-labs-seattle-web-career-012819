@@ -10,21 +10,30 @@
   </ul>
 </div>
 
+<h3>Categories</h3>
+<ul>
+<% @post.categories.each do |category| %>
+  <li><%= category.name %></li>
+<% end %>
+</ul>
+
 <h3>Users</h3>
 <div>
   <% unique = @post.comments.map{|comment| comment.user}.uniq %>
-  <% unique.each do |user| %>
-  <%= user.username %>
-  <% end  %>
+    <ul>
+    <% unique.each do |user| %>
+      <li><%= user.username %></li>
+    <% end  %>
+  </ul>
 </div>
-
+<h1><%post_id = @comment.post_id %></h1>
 <h3>Add new comment</h3>
 <%= form_for @comment do |f| %>
+  <%= f.label :user  %>
   <%= f.collection_select :user_id, User.all, :id, :username, :include_blank => true %>
-  <%= f.fields_for :comments, @post.comments.build do |comments_fields| %>
-    <%= comments_fields.text_field :content %>
-    <% end %>
-  <%= f.label :content%>
+  <%= f.label :Comments%>
   <%= f.text_field :content %>
+  <%= f.hidden_field :post_id, :value => @post.id %>
+
   <%= f.submit %>
 <% end %>
