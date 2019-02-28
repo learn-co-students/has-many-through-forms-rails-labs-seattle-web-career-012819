@@ -1,8 +1,10 @@
 Rails.application.routes.draw do
-  resources :posts
+  resources :posts, only: [:index, :new, :create, :show] do
+    get 'comments', as: 'comments'
+  end
   resources :comments
-  resources :users
-  resources :categories
+  resources :users, only: [:show]
+  resources :categories, only: [:show]
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
